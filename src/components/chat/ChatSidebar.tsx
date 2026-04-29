@@ -1,10 +1,19 @@
-import { HelpCircle, Tag } from "lucide-react";
-import { FAQS, HOT_KEYWORDS } from "@/data/faq";
+import { HelpCircle, MessageSquare, Plus } from "lucide-react";
+import { FAQS } from "@/data/faq";
 import { cn } from "@/lib/utils";
+
+export interface ChatHistoryItem {
+  id: string;
+  title: string;
+  updatedAt: number;
+}
 
 interface ChatSidebarProps {
   onQuestionPick: (q: string) => void;
-  onKeywordPick: (k: string) => void;
+  onNewConversation: () => void;
+  onConversationPick: (id: string) => void;
+  conversations: ChatHistoryItem[];
+  activeConversationId: string;
   fullscreen?: boolean;
   disabled?: boolean;
 }
@@ -21,7 +30,10 @@ const ALL_FAQS: string[] = [
 
 export function ChatSidebar({
   onQuestionPick,
-  onKeywordPick,
+  onNewConversation,
+  onConversationPick,
+  conversations,
+  activeConversationId,
   fullscreen,
   disabled,
 }: ChatSidebarProps) {
@@ -32,6 +44,18 @@ export function ChatSidebar({
         fullscreen ? "w-80" : "w-64",
       )}
     >
+      <div>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onNewConversation}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-gov-blue/25 bg-gov-blue px-3 py-2.5 text-sm font-semibold text-gov-blue-foreground shadow-sm transition-colors hover:bg-gov-blue/90 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Plus className="h-4 w-4" />
+          新建对话
+        </button>
+      </div>
+
       <div>
         <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           <HelpCircle className="h-3.5 w-3.5" />
@@ -53,20 +77,33 @@ export function ChatSidebar({
         </nav>
       </div>
 
-      <div>
+      <div className="min-h-0 flex-1">
         <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-          <Tag className="h-3 w-3" /> 热门搜索
+          <MessageSquare className="h-3.5 w-3.5" /> 历史对话
         </h3>
-        <div className="flex flex-wrap gap-1.5">
-          {HOT_KEYWORDS.map((k) => (
+        <div className="flex max-h-64 flex-col gap-1.5 overflow-y-auto pr-1">
+          {conversations.map((conversation) => (
             <button
-              key={k}
+              key={conversation.id}
               type="button"
               disabled={disabled}
-              onClick={() => onKeywordPick(`关于"${k}"，我想了解相关政策`)}
-              className="rounded-full border border-border bg-background px-2.5 py-1 text-xs text-foreground transition-colors hover:border-gov-blue/50 hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50"
+              onClick={() => onConversationPick(conversation.id)}
+              className={cn(
+                "rounded-md border px-3 py-2 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+                conversation.id === activeConversationId
+                  ? "border-gov-blue/40 bg-gov-blue/10 text-gov-blue"
+                  : "border-border bg-background text-foreground hover:border-gov-blue/50 hover:bg-accent",
+              )}
             >
-              #{k}
+              <span className="block truncate text-xs font-medium">{conversation.title}</span>
+              <span className="mt-1 block text-[10px] text-muted-foreground">
+                {new Date(conversation.updatedAt).toLocaleString("zh-CN", {
+                  month: "2-digit",
+                  day: "2-digit",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
             </button>
           ))}
         </div>

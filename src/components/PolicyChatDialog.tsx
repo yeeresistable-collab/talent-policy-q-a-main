@@ -14,15 +14,83 @@ const WELCOME: ChatMessage = {
     "您好，我是**惠才通**人才政策智能助手。\n\n您可以：\n- 在左侧 **常见问题** 列表中点击任意问题快速提问\n- 或直接在下方输入您关心的人才落户、补贴、住房、子女教育、外国人来华工作许可等问题\n\n📌 以上信息仅供参考，最终以现行有效的政府文件为准。",
 };
 
+interface ChatConversation {
+  id: string;
+  title: string;
+  messages: ChatMessage[];
+  updatedAt: number;
+}
+
+interface ChatHistoryState {
+  activeConversationId: string;
+  conversations: ChatConversation[];
+}
+
+const CHAT_HISTORY_KEY = "talent-policy-chat-history";
+const MAX_HISTORY_COUNT = 20;
+
+const createConversationId = () =>
+  `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+const getConversationTitle = (messages: ChatMessage[]) => {
+  const firstUserMessage = messages.find((message) => message.role === "user")?.content.trim();
+  if (!firstUserMessage) return "新对话";
+  return firstUserMessage.length > 24
+    ? `${firstUserMessage.slice(0, 24)}...`
+    : firstUserMessage;
+};
+
+const createConversation = (messages: ChatMessage[] = [WELCOME]): ChatConversation => ({
+  id: createConversationId(),
+  title: getConversationTitle(messages),
+  messages,
+  updatedAt: Date.now(),
+});
+
+const readChatHistory = (): ChatHistoryState => {
+  if (typeof window === "undefined") {
+    const conversation = createConversation();
+    return { activeConversationId: conversation.id, conversations: [conversation] };
+  }
+
+  try {
+    const raw = window.localStorage.getItem(CHAT_HISTORY_KEY);
+    const parsed = raw ? (JSON.parse(raw) as ChatConversation[]) : [];
+    const validConversations = parsed.filter(
+      (conversation) =>
+        conversation.id &&
+        Array.isArray(conversation.messages) &&
+        conversation.messages.length > 0,
+    );
+    if (validConversations.length > 0) {
+      const sortedConversations = validConversations.sort((a, b) => b.updatedAt - a.updatedAt);
+      return {
+        activeConversationId: sortedConversations[0].id,
+        conversations: sortedConversations.slice(0, MAX_HISTORY_COUNT),
+      };
+    }
+  } catch {
+    window.localStorage.removeItem(CHAT_HISTORY_KEY);
+  }
+
+  const conversation = createConversation();
+  return { activeConversationId: conversation.id, conversations: [conversation] };
+};
+
 export function PolicyChatDialog() {
   const { open, closeDialog, consumeInitialQuestion } = useChatDialog();
   const [fullscreen, setFullscreen] = useState(true);
+  const [chatHistory, setChatHistory] = useState<ChatHistoryState>(readChatHistory);
   const { messages, isLoading, send, reset } = useChatStream();
+  const activeConversation =
+    chatHistory.conversations.find(
+      (conversation) => conversation.id === chatHistory.activeConversationId,
+    ) ?? chatHistory.conversations[0];
 
   // 首次打开时插入欢迎语 + 自动发送初始问题
   useEffect(() => {
     if (open) {
-      if (messages.length === 0) reset([WELCOME]);
+      if (messages.length === 0) reset(activeConversation?.messages ?? [WELCOME]);
       const q = consumeInitialQuestion();
       if (q) {
         // 微延迟确保欢迎语已插入
@@ -31,6 +99,38 @@ export function PolicyChatDialog() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      CHAT_HISTORY_KEY,
+      JSON.stringify(chatHistory.conversations),
+    );
+  }, [chatHistory.conversations]);
+
+  useEffect(() => {
+    if (!open || messages.length === 0) return;
+
+    setChatHistory((currentHistory) => {
+      const nextConversations = currentHistory.conversations
+        .map((conversation) =>
+          conversation.id === currentHistory.activeConversationId
+            ? {
+                ...conversation,
+                title: getConversationTitle(messages),
+                messages,
+                updatedAt: Date.now(),
+              }
+            : conversation,
+        )
+        .sort((a, b) => b.updatedAt - a.updatedAt)
+        .slice(0, MAX_HISTORY_COUNT);
+
+      return {
+        ...currentHistory,
+        conversations: nextConversations,
+      };
+    });
+  }, [messages, open]);
 
   // ESC 关闭
   useEffect(() => {
@@ -58,8 +158,23 @@ export function PolicyChatDialog() {
 
   if (!open) return null;
 
-  const handleClear = () => {
-    reset([WELCOME]);
+  const handleNewConversation = () => {
+    const conversation = createConversation();
+    setChatHistory((currentHistory) => ({
+      activeConversationId: conversation.id,
+      conversations: [conversation, ...currentHistory.conversations].slice(0, MAX_HISTORY_COUNT),
+    }));
+    reset(conversation.messages);
+  };
+
+  const handleConversationPick = (conversationId: string) => {
+    const conversation = chatHistory.conversations.find((item) => item.id === conversationId);
+    if (!conversation) return;
+    setChatHistory((currentHistory) => ({
+      ...currentHistory,
+      activeConversationId: conversationId,
+    }));
+    reset(conversation.messages);
   };
 
   return (
@@ -98,9 +213,9 @@ export function PolicyChatDialog() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleClear}
+              onClick={handleNewConversation}
               className="h-8 gap-1 text-foreground hover:bg-accent"
-              title="清空对话"
+              title="新建对话"
             >
               <RefreshCw className="h-4 w-4" />
               <span className="hidden sm:inline">新对话</span>
@@ -131,7 +246,10 @@ export function PolicyChatDialog() {
           <div className="hidden md:block">
             <ChatSidebar
               onQuestionPick={(q) => send(q)}
-              onKeywordPick={(k) => send(k)}
+              onNewConversation={handleNewConversation}
+              onConversationPick={handleConversationPick}
+              conversations={chatHistory.conversations}
+              activeConversationId={chatHistory.activeConversationId}
               fullscreen={fullscreen}
               disabled={isLoading}
             />
@@ -142,7 +260,7 @@ export function PolicyChatDialog() {
               <ChatMessages messages={messages} isLoading={isLoading} fullscreen={fullscreen} />
             </div>
 
-            <ChatInput onSend={send} disabled={isLoading} />
+            <ChatInput onSend={send} onKeywordPick={(k) => send(k)} disabled={isLoading} />
           </div>
         </div>
       </div>

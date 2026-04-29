@@ -2,13 +2,17 @@ import { Send } from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { HOT_KEYWORDS } from "@/data/faq";
 
 interface ChatInputProps {
   onSend: (text: string) => void;
+  onKeywordPick: (text: string) => void;
   disabled?: boolean;
 }
 
-export function ChatInput({ onSend, disabled }: ChatInputProps) {
+const FEATURED_KEYWORDS = HOT_KEYWORDS.slice(0, 6);
+
+export function ChatInput({ onSend, onKeywordPick, disabled }: ChatInputProps) {
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
@@ -27,6 +31,20 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
 
   return (
     <div className="border-t border-border bg-background px-4 py-3">
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
+        <span className="mr-1 text-xs font-semibold text-muted-foreground">热门搜索</span>
+        {FEATURED_KEYWORDS.map((keyword) => (
+          <button
+            key={keyword}
+            type="button"
+            disabled={disabled}
+            onClick={() => onKeywordPick(`关于"${keyword}"，我想了解相关政策`)}
+            className="rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs text-foreground transition-colors hover:border-gov-blue/50 hover:bg-gov-blue/10 hover:text-gov-blue disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            #{keyword}
+          </button>
+        ))}
+      </div>
       <div className="flex items-end gap-2">
         <Textarea
           value={value}
