@@ -31,3 +31,34 @@ npm run dev
 ```
 
 前端默认运行在 `http://localhost:8080`，开发环境下 `/api/*` 会通过 Vite 代理到后端服务。
+
+## 公网部署（无 Supabase Token）
+
+推荐采用 **Render 部署后端 + GitHub Pages 部署前端**。
+
+### 1) 部署后端到 Render
+
+本仓库已提供 `render.yaml`，可直接在 Render 里使用 Blueprint 导入。
+
+- 新建 Web Service（或 Blueprint）
+- 关键环境变量：
+  - `MINIMAX_API_KEY`（必填）
+  - `MINIMAX_MODEL`（默认 `MiniMax/MiniMax-M2.5`）
+  - `MINIMAX_BASE_URL`（默认 `https://api.minimax.io/v1`）
+- 健康检查：`/api/health`
+
+部署完成后，你会拿到后端公网地址，例如：
+
+`https://talent-policy-qa-api.onrender.com`
+
+### 2) 重新构建并发布 GitHub Pages 前端
+
+将前端聊天地址指向上一步 Render 地址：
+
+```bash
+VITE_BASE_PATH=/talent-policy-q-a-main/ \
+VITE_CHAT_URL=https://<你的-render-域名>/api/chat \
+npm run build -- --outDir gh-pages-live --emptyOutDir
+```
+
+然后把 `gh-pages-live` 目录内容提交并推送到 `gh-pages` 分支即可。
