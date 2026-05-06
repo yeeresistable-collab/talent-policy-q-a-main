@@ -60,7 +60,7 @@ export function HeroSection() {
           <div className="relative w-full max-w-sm rounded-xl border border-white/20 bg-white/5 p-5 shadow-2xl backdrop-blur">
             <div className="flex items-center gap-2 border-b border-white/15 pb-3">
               <div className="h-2.5 w-2.5 rounded-full bg-gov-gold" />
-              <p className="text-sm font-medium">惠才通 智能问答</p>
+              <p className="text-sm font-medium">人才政策助手</p>
             </div>
             <div className="mt-4 space-y-3 text-sm">
               <div className="rounded-lg bg-white/10 p-3">
@@ -68,7 +68,7 @@ export function HeroSection() {
                 <p>博士引进的安家费有多少？</p>
               </div>
               <div className="rounded-lg bg-gov-gold/15 p-3 text-gov-red-foreground">
-                <p className="text-xs text-gov-gold">惠才通</p>
+                <p className="text-xs text-gov-gold">人才政策助手</p>
                 <p className="leading-relaxed">
                   根据 A 类人才认定，博士引进通常可享受 <b className="text-gov-gold">30–80 万元</b> 安家费，
                   分 3 年发放，并配套人才公寓申请资格…

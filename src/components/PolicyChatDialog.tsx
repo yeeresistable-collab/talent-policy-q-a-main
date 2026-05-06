@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const WELCOME: ChatMessage = {
   role: "assistant",
   content:
-    "您好，我是**惠才通**人才政策智能助手。\n\n您可以：\n- 在左侧 **常见问题** 列表中点击任意问题快速提问\n- 或直接在下方输入您关心的人才落户、补贴、住房、子女教育、外国人来华工作许可等问题\n\n📌 以上信息仅供参考，最终以现行有效的政府文件为准。",
+    "您好，我是**人才政策助手**。\n\n您可以：\n- 在左侧 **常见问题** 列表中点击任意问题快速提问\n- 或直接在下方输入您关心的人才落户、补贴、住房、子女教育、外国人来华工作许可等问题\n\n📌 以上信息仅供参考，最终以现行有效的政府文件为准。",
 };
 
 interface ChatConversation {
@@ -202,7 +202,7 @@ export function PolicyChatDialog() {
             </div>
             <div>
               <h2 className="text-base font-semibold leading-tight">
-                惠才通 · 人才政策智能问答
+                人才政策助手
               </h2>
               <p className="text-xs text-muted-foreground">
                 覆盖落户·补贴·住房·教育就业 · 市人才工作领导小组办公室

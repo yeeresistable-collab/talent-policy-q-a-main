@@ -9,7 +9,7 @@ export function FloatingChatButton() {
     <button
       type="button"
       onClick={() => openDialog()}
-      aria-label="打开人才政策智能问答"
+      aria-label="打开人才政策助手"
       className="group fixed bottom-6 right-6 z-40 flex items-center gap-2"
     >
       <span className="hidden rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground shadow-md transition-all group-hover:flex sm:inline-block">

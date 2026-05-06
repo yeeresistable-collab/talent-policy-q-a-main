@@ -7,11 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import hallBg from "@/assets/hall-bg.jpg";
 
 const HOT_QUESTIONS = [
-  "留学生人才引进",
-  "外国人来华工作许可 90 日以上新办需要哪些材料？",
-  "外国人工作许可延期应提前多久办理？",
-  "科技企业孵化器认定",
-  "我想在本市开公司，能享受什么政策",
+  "境外获得的学位证书是否需要认证，在哪里认证？",
+  "无犯罪记录证明如何开具？",
+  "是否一定要做境外体检？",
+  "随行家属关系证明需要认证吗？",
+  "哪些材料需要翻译？",
 ];
 
 function HomeScreen() {
@@ -53,8 +53,8 @@ function HomeScreen() {
             <Sparkles className="h-5 w-5" />
           </div>
           <div className="leading-tight">
-            <p className="text-base font-bold text-foreground">惠才通</p>
-            <p className="text-[10px] tracking-[0.2em] text-muted-foreground">HUI CAI TONG</p>
+            <p className="text-base font-bold text-foreground">人才政策助手</p>
+            <p className="text-[10px] tracking-[0.2em] text-muted-foreground">TALENT POLICY ASSISTANT</p>
           </div>
         </div>
         <nav className="flex items-center gap-6 text-sm text-foreground/80">
@@ -70,7 +70,7 @@ function HomeScreen() {
       {/* 主体 */}
       <section className="relative z-10 mx-auto flex max-w-3xl flex-col items-center px-6 pb-20 pt-10 sm:pt-16">
         <h1 className="text-balance text-center text-2xl font-semibold text-foreground sm:text-3xl md:text-[34px]">
-          Hi~我是<span className="text-gov-red">惠才通</span>，为您提供"暖心办"人才政策和工作许可服务
+          Hi~我是<span className="text-gov-red">人才政策助手</span>，为您提供"暖心办"人才政策和工作许可服务
         </h1>
 
         {/* 主输入框 */}
@@ -115,7 +115,7 @@ function HomeScreen() {
 
       {/* 底部 */}
       <footer className="relative z-10 border-t border-white/40 bg-white/50 px-6 py-3 text-center text-xs text-muted-foreground backdrop-blur-md">
-        市人才工作领导小组办公室 · 政务咨询投诉举报电话：12345 · 内容由大模型智能生成，仅供参考
+        内容由大模型智能生成，仅供参考。
       </footer>
     </main>
   );

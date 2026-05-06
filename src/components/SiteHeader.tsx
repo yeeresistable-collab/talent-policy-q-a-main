@@ -22,7 +22,7 @@ export function SiteHeader() {
           </div>
           <div className="leading-tight">
             <p className="text-sm font-semibold text-foreground">市人才服务中心</p>
-            <p className="text-xs text-muted-foreground">惠才通·人才政策门户</p>
+            <p className="text-xs text-muted-foreground">人才政策助手</p>
           </div>
         </a>
 

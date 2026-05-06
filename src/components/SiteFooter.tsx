@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -15,8 +15,8 @@ export function SiteFooter() {
           <h3 className="text-base font-semibold">联系方式</h3>
           <ul className="mt-3 space-y-2 text-sm text-gov-blue-foreground/85">
             <li className="flex items-start gap-2">
-              <Phone className="mt-0.5 h-4 w-4 text-gov-gold" />
-              政务服务热线：12345（24h）
+              <span className="mt-0.5 h-4 w-4 text-gov-gold">•</span>
+              咨询请以属地经办窗口或官方办事渠道为准
             </li>
             <li className="flex items-start gap-2">
               <Mail className="mt-0.5 h-4 w-4 text-gov-gold" />

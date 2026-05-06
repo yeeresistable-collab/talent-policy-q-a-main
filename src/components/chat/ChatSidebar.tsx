@@ -1,5 +1,4 @@
 import { HelpCircle, MessageSquare, Plus } from "lucide-react";
-import { FAQS } from "@/data/faq";
 import { cn } from "@/lib/utils";
 
 export interface ChatHistoryItem {
@@ -18,14 +17,13 @@ interface ChatSidebarProps {
   disabled?: boolean;
 }
 
-// 精选 5 个最常见的问题
+// 与首页保持一致的热门问题
 const ALL_FAQS: string[] = [
-  FAQS.settle[0],
-  FAQS.subsidy[0],
-  FAQS.housing[0],
-  FAQS.family[0],
-  FAQS.workPermit[0],
-  FAQS.workPermit[3],
+  "境外获得的学位证书是否需要认证，在哪里认证？",
+  "无犯罪记录证明如何开具？",
+  "是否一定要做境外体检？",
+  "随行家属关系证明需要认证吗？",
+  "哪些材料需要翻译？",
 ];
 
 export function ChatSidebar({
@@ -40,7 +38,7 @@ export function ChatSidebar({
   return (
     <aside
       className={cn(
-        "flex h-full min-h-0 flex-col gap-4 overflow-y-auto border-r border-border bg-background/70 p-4 backdrop-blur-sm",
+        "flex h-full min-h-0 flex-col gap-4 overflow-hidden border-r border-border bg-background/70 p-4 backdrop-blur-sm",
         fullscreen ? "w-80" : "w-64",
       )}
     >
@@ -59,7 +57,7 @@ export function ChatSidebar({
       <div>
         <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           <HelpCircle className="h-3.5 w-3.5" />
-          常见问题
+          热门问题
         </h3>
         <nav className="flex flex-col gap-1.5">
           {ALL_FAQS.map((q) => (
@@ -77,11 +75,11 @@ export function ChatSidebar({
         </nav>
       </div>
 
-      <div className="min-h-0 flex-1">
+      <div className="min-h-0 flex-1 overflow-hidden">
         <h3 className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           <MessageSquare className="h-3.5 w-3.5" /> 历史对话
         </h3>
-        <div className="flex max-h-64 flex-col gap-1.5 overflow-y-auto pr-1">
+        <div className="flex h-full min-h-0 flex-col gap-1.5 overflow-y-auto pr-1">
           {conversations.map((conversation) => (
             <button
               key={conversation.id}
@@ -109,11 +107,10 @@ export function ChatSidebar({
         </div>
       </div>
 
-      <div className="rounded-md border border-border bg-muted/40 p-3 text-xs text-foreground">
-        <p className="font-semibold text-foreground">人工服务</p>
+      <div className="shrink-0 rounded-md border border-border bg-muted/40 p-3 text-xs text-foreground">
+        <p className="font-semibold text-foreground">咨询提示</p>
         <p className="mt-1 leading-relaxed text-muted-foreground">
-          12345 政务服务热线<br />
-          周一至周日 8:30-17:30
+          如遇复杂个案，请以属地经办窗口或官方办事渠道解释为准。
         </p>
       </div>
     </aside>

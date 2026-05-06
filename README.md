@@ -1,4 +1,4 @@
-# 惠才通人才政策问答
+# 人才政策助手
 
 前端是 Vite + React，聊天接口通过本地 Node 后端代理到 MiniMax OpenAI 兼容接口，默认使用 `MiniMax-M2.5`。
 

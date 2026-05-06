@@ -66,7 +66,7 @@ export function ChatInput({ onSend, onKeywordPick, disabled }: ChatInputProps) {
         </Button>
       </div>
       <p className="mt-2 text-xs text-muted-foreground">
-        💡 回答仅供参考，正式以官方文件和经办窗口解释为准。如需人工咨询请拨打 <span className="font-semibold text-foreground">12345</span> 政务服务热线。
+        💡 回答仅供参考，正式以官方文件和经办窗口解释为准。
       </p>
     </div>
   );
