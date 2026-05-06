@@ -204,9 +204,6 @@ export function PolicyChatDialog() {
               <h2 className="text-base font-semibold leading-tight">
                 人才政策助手
               </h2>
-              <p className="text-xs text-muted-foreground">
-                覆盖落户·补贴·住房·教育就业 · 市人才工作领导小组办公室
-              </p>
             </div>
           </div>
           <div className="flex items-center gap-1">
