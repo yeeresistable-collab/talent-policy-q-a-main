@@ -18,7 +18,7 @@
 ### 路径 2：客户自己的手机/电脑打开网页
 
 1. 终端 A：`npm run api`
-2. 终端 B：`npm run demo:tunnel`（或 `cloudflared tunnel --url http://127.0.0.1:8787`）
+2. 终端 B：`npm run demo:tunnel`；若 QUIC 连不上边缘（超时、1033），改用 **`npm run demo:tunnel:http2`**（`--protocol http2`）。
 3. 终端里会出现类似 `https://xxxx.trycloudflare.com`，**整段复制**（不要丢路径）。
 4. 用隧道地址更新公网前端并发布一次 `gh-pages`（把下面命令里的 URL 换成你终端里那一行）：
 
@@ -69,7 +69,7 @@ MINIMAX_API_KEY=你的 MiniMax API Key
 
 ## 部署 Supabase Edge Function（`chat`）
 
-本仓库的 `supabase/functions/chat` 会在云端转发到 Lovable AI，需 **Supabase 账号对本项目有权限**。CLI 可用 `npx`，无需单独安装。
+Edge 上的 `chat` 与本地 Node 使用**同一套参考材料检索逻辑**（`skill-engine` 移植）：启动时加载随函数打包的 `beijing-work-permit-reference.md` 与 `skill.md` / `skill.json`，先拆条检索、追问、窗口短路、无命中拒答，需要模型复述时再调用 **Lovable** 流式补全。需 **Supabase 账号对本项目有权限**。CLI 可用 `npx`，无需单独安装。
 
 ### 1) 登录（二选一）
 
@@ -97,15 +97,11 @@ npx supabase@latest secrets set LOVABLE_API_KEY=你的密钥 --project-ref uvcvh
 npm run deploy:supabase:chat
 ```
 
-等价于：`npx supabase@latest functions deploy chat --project-ref uvcvhwbixwdcsnygriiw`。
+该命令会先把 `server/knowledge/beijing-work-permit-reference.md` 与 `server/skills/beijing-work-permit-consultant/` 下的 skill 文件复制到 `supabase/functions/chat/knowledge/`，再执行上述 deploy，保证线上材料与仓库主源一致。
 
-部署成功后，公网接口仍为：
+公网聊天接口：
 
 `https://uvcvhwbixwdcsnygriiw.supabase.co/functions/v1/chat`
-
-### 说明
-
-当前 Edge 函数实现的是 **Lovable 流式代理 + 系统提示词**，与本地 Node 里「工作许可参考材料检索」那套逻辑**不是同一份代码**。若要让公网也与本地材料版一致，需要把该逻辑迁到 Edge 或让前端改调已部署的 Node API。
 
 ---
 

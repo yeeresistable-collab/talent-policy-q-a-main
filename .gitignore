@@ -25,3 +25,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local GitHub Pages deploy worktree (never commit site output here)
+gh-pages-live/
+supabase/.temp/
