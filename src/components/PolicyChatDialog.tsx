@@ -257,7 +257,7 @@ export function PolicyChatDialog() {
               <ChatMessages messages={messages} isLoading={isLoading} fullscreen={fullscreen} />
             </div>
 
-            <ChatInput onSend={send} onKeywordPick={(k) => send(k)} disabled={isLoading} />
+            <ChatInput onSend={send} disabled={isLoading} />
           </div>
         </div>
       </div>
