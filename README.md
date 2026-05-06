@@ -67,6 +67,48 @@ MINIMAX_API_KEY=你的 MiniMax API Key
 
 ---
 
+## 部署 Supabase Edge Function（`chat`）
+
+本仓库的 `supabase/functions/chat` 会在云端转发到 Lovable AI，需 **Supabase 账号对本项目有权限**。CLI 可用 `npx`，无需单独安装。
+
+### 1) 登录（二选一）
+
+- **本机浏览器登录（推荐）**，在项目根目录执行：
+
+```bash
+npx supabase@latest login
+```
+
+按提示在浏览器完成授权后，令牌会存在本机，**不必把 token 发给别人**。
+
+- **CI / 无浏览器**：在环境里设置 `SUPABASE_ACCESS_TOKEN`（在 [Supabase Dashboard → Account → Access Tokens](https://supabase.com/dashboard/account/tokens) 生成），再执行部署命令。
+
+### 2) 配置函数密钥
+
+Edge 函数读取环境变量 **`LOVABLE_API_KEY`**。在 [Dashboard → Project → Edge Functions → Secrets](https://supabase.com/dashboard/project/uvcvhwbixwdcsnygriiw/settings/functions) 添加，或：
+
+```bash
+npx supabase@latest secrets set LOVABLE_API_KEY=你的密钥 --project-ref uvcvhwbixwdcsnygriiw
+```
+
+### 3) 部署
+
+```bash
+npm run deploy:supabase:chat
+```
+
+等价于：`npx supabase@latest functions deploy chat --project-ref uvcvhwbixwdcsnygriiw`。
+
+部署成功后，公网接口仍为：
+
+`https://uvcvhwbixwdcsnygriiw.supabase.co/functions/v1/chat`
+
+### 说明
+
+当前 Edge 函数实现的是 **Lovable 流式代理 + 系统提示词**，与本地 Node 里「工作许可参考材料检索」那套逻辑**不是同一份代码**。若要让公网也与本地材料版一致，需要把该逻辑迁到 Edge 或让前端改调已部署的 Node API。
+
+---
+
 ## 可选：长期公网后端（方案 B）
 
 不需要 Supabase token，也可用 **Render + GitHub Pages**（见仓库根目录 `render.yaml`）。需要 Render 账号并配置 `MINIMAX_API_KEY`。日常演示不必用它。

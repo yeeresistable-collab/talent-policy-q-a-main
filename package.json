@@ -13,6 +13,7 @@
     "preview": "vite preview",
     "test:skill": "node scripts/skill-regression.mjs",
     "demo:tunnel": "cloudflared tunnel --url http://127.0.0.1:8787",
+    "deploy:supabase:chat": "npx --yes supabase@latest functions deploy chat --project-ref uvcvhwbixwdcsnygriiw",
     "test": "vitest run",
     "test:watch": "vitest"
   },
