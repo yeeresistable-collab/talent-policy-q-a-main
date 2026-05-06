@@ -103,6 +103,19 @@ npm run deploy:supabase:chat
 
 `https://uvcvhwbixwdcsnygriiw.supabase.co/functions/v1/chat`
 
+### 发布到 GitHub Pages（避免 non-fast-forward）
+
+在项目根目录**只提交源码**；静态站应出现在分支 `gh-pages` 的**根目录**（不要误把构建结果提交到 `main` 下的 `gh-pages-live/` 文件夹）。
+
+推荐一条命令（需先设好 `VITE_CHAT_URL`）：
+
+```bash
+VITE_CHAT_URL="https://你的隧道或Supabase/api/chat" npm run publish:gh-pages
+```
+
+若仍提示 `non-fast-forward`，说明远程 `gh-pages` 上已有你本地没有的提交。到 `gh-pages-live` 目录执行 `git pull --rebase origin gh-pages` 后再 `git push`；若确定只有自己发布静态站，可用  
+`git push --force-with-lease origin HEAD:gh-pages`（会覆盖远程该分支历史，慎用）。
+
 ---
 
 ## 可选：长期公网后端（方案 B）
